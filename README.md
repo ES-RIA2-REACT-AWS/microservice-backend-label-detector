@@ -13,11 +13,11 @@ The output will be the result of this analysis.
 
 ### Requirements
 
-| Version |  Description  | 
-|---|---|
-| Python 3.10.7  | For code execution  |
-| pip 22.2  | Python package manager  |
-| virtualenv 20.16.3  | Python virtual environments tool|
+| Version            |  Description  | 
+|--------------------|---|
+| Python 3.10.7      | For code execution  |
+| pip 23.0.1         | Python package manager  |
+| virtualenv 20.16.3 | Python virtual environments tool|
  
 
 ### Clone repository
@@ -34,6 +34,15 @@ git switch develop
 pip3 install -r requirements.txt 
 ```
 
+### Run 
+
+#### Local
+
+Run FastAPI
+```sh
+uvicorn main:app --reload
+```
+
 ### Configuration
 
 The development environment requires to:
@@ -45,7 +54,25 @@ The development environment requires to:
 
 ##  Project directory structure
 
-> Coming soon..
+```sh
+.
+├── app
+├── README.md
+├── requirements.txt
+├── tests
+└── venv
+```
+
+
+
+| Directory | Description                                              | 
+|-----------|----------------------------------------------------------|
+| app/      | Project directory, contains the API, LabelDetector..     |
+| tests/    | Test directory, contains Unittests and Integration tests |
+| venv/     | Virtual environment                                      |
+ 
+
+
 
 ## Contributing
 
