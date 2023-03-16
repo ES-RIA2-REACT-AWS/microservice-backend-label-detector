@@ -34,6 +34,33 @@ git switch develop
 pip3 install -r requirements.txt 
 ```
 
+### Local configuration
+
+- Set the project `app` directory to your `PYTHONPATH`.
+- Copy `./example.secret.aws.ini` and rename it to `./secret.aws.ini`.
+- Set the variable environment `CONFIG_FILE_PATH` to the path of your secret file `./secret.aws.ini` 
+- Set your credentials in `./secret.aws.ini`
+
+> Your secret file can be wherever you want, you just need to set the environment variable `CONFIG_FILE_PATH` properly.
+
+#### Linux commands
+1. Set the project `app` directory to your `PYTHONPATH`.
+```sh
+export PYTHONPATH="$PYTHONPATH:app"
+```
+2. Copy `./example.secret.aws.ini` and rename it to `./secret.aws.ini`.
+
+```sh
+cp ./example.secret.aws.ini ./secret.aws.ini
+```
+3. Set the variable environment `CONFIG_FILE_PATH` to the path of your secret file `./secret.aws.ini` 
+```sh
+export AWS_CONFIG_PATH="./secret.aws.ini"
+```
+
+4. Set your aws credentials.
+
+
 ### Run 
 
 #### Local
