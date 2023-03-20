@@ -67,14 +67,14 @@ export CONFIG_FILE_PATH="./secret.credentials.ini"
 
 Run FastAPI
 ```sh
-uvicorn main:app --reload
+uvicorn app.main:app --reload --port 3000
 ```
 
 ### Configuration
 
 The development environment requires to:
 - Create the virtual environment
-- Add the `src` directory to the PYTHONPATH
+- Add the `app` directory to the PYTHONPATH
 - Assign the environment variable
 - Installing the library prerequisites in `requirements.txt`
 
@@ -84,19 +84,32 @@ The development environment requires to:
 ```sh
 .
 ├── app
+│   ├── client
+│   ├── controllers
+│   ├── __init__.py
+│   ├── main.py
+│   ├── models
+│   └── services
+├── config.env
+├── example.secret.credentials.ini
 ├── README.md
 ├── requirements.txt
-├── tests
-└── venv
+└── tests
+    ├── __init__.py
+    ├── integration
+    └── unit
+
 ```
 
 
 
-| Directory | Description                                              | 
-|-----------|----------------------------------------------------------|
-| app/      | Project directory, contains the API, LabelDetector..     |
-| tests/    | Test directory, contains Unittests and Integration tests |
-| venv/     | Virtual environment                                      |
+| Directory    | Description                                              | 
+|--------------|----------------------------------------------------------|
+| app/         | Project directory, contains the API, LabelDetector..     |
+| tests/       | Test directory, contains Unittests and Integration tests |
+| controllers/ | -                                                        |
+| models/      | -                                                        |
+| services/    | -                                                        |
  
 
 
