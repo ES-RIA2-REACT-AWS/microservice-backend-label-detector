@@ -55,7 +55,7 @@ cp ./example.secret.credentials.ini ./secret.credentials.ini
 ```
 3. Set the variable environment `CONFIG_FILE_PATH` to the path of your secret file `./secret.credentials.ini` 
 ```sh
-export AWS_CONFIG_PATH="./secret.credentials.ini"
+export CONFIG_FILE_PATH="./secret.credentials.ini"
 ```
 
 4. Set your aws credentials.
