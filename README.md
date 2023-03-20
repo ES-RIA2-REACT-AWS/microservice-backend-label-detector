@@ -37,9 +37,9 @@ pip3 install -r requirements.txt
 ### Local configuration
 
 - Set the project `app` directory to your `PYTHONPATH`.
-- Copy `./example.secret.aws.ini` and rename it to `./secret.aws.ini`.
-- Set the variable environment `CONFIG_FILE_PATH` to the path of your secret file `./secret.aws.ini` 
-- Set your credentials in `./secret.aws.ini`
+- Copy `./example.secret.credentials.ini` and rename it to `./secret.credentials.ini`.
+- Set the variable environment `CONFIG_FILE_PATH` to the path of your secret file `./secret.credentials.ini` 
+- Set your credentials in `./secret.credentials.ini`
 
 > Your secret file can be wherever you want, you just need to set the environment variable `CONFIG_FILE_PATH` properly.
 
@@ -48,14 +48,14 @@ pip3 install -r requirements.txt
 ```sh
 export PYTHONPATH="$PYTHONPATH:app"
 ```
-2. Copy `./example.secret.aws.ini` and rename it to `./secret.aws.ini`.
+2. Copy `./example.secret.credentials.ini` and rename it to `./secret.credentials.ini`.
 
 ```sh
-cp ./example.secret.aws.ini ./secret.aws.ini
+cp ./example.secret.credentials.ini ./secret.credentials.ini
 ```
-3. Set the variable environment `CONFIG_FILE_PATH` to the path of your secret file `./secret.aws.ini` 
+3. Set the variable environment `CONFIG_FILE_PATH` to the path of your secret file `./secret.credentials.ini` 
 ```sh
-export AWS_CONFIG_PATH="./secret.aws.ini"
+export AWS_CONFIG_PATH="./secret.credentials.ini"
 ```
 
 4. Set your aws credentials.
