@@ -4,8 +4,7 @@
 # Version:   16-03-2023 - original (dedicated to RIA1)
 # Remarks:   -
 # -----------------------------------------------------------------------------------
-
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Depends
 
 from models.label_detector_model import LabelDetectorModel
 from services.image_analyzer.aws_rekognition_service import AwsRekognitionService
@@ -15,9 +14,8 @@ router = APIRouter()
 
 
 @router.post("/analyze")
-async def analyze(input_data: LabelDetectorModel) -> dict:
+async def analyze(input_data: LabelDetectorModel, rekognition: AwsRekognitionService = Depends()):
     try:
-        rekognition = AwsRekognitionService()
         results = await rekognition.analyze(input_data.image_url, input_data.max_label, input_data.min_confidence_level)
         return results
     except ConnectionError:
