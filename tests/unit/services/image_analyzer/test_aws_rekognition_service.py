@@ -1,15 +1,15 @@
 import unittest
 
-from services.client.client import Client
+from services.image_analyzer.aws_rekognition_client import AwsRekognitionClient
 
 
 class TestClient(unittest.TestCase):
 
-    _client: Client
+    _client: AwsRekognitionClient
 
     def test_get_client_success(self):
         # given
-        self._client = Client()
+        self._client = AwsRekognitionClient()
 
         # when
         aws_client = self._client.get_aws_client()
