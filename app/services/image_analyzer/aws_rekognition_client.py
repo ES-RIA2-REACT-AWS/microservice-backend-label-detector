@@ -1,5 +1,5 @@
 # -----------------------------------------------------------------------------------
-# File   :   aws_client.py
+# File   :   aws_rekognition_client.py
 # Author :   Mélodie Ohan
 # Version:   16-03-2023 - original (dedicated to RIA1)
 # Remarks:   -
@@ -10,7 +10,7 @@ import boto3
 from config.aws_credentials import AwsCredentials
 
 
-class Client:
+class AwsRekognitionClient:
     """Provides clients from storage services"""
 
     _aws_credentials: AwsCredentials
