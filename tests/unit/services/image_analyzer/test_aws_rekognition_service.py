@@ -3,7 +3,7 @@ import unittest
 from services.image_analyzer.aws_rekognition_client import AwsRekognitionClient
 
 
-class TestClient(unittest.TestCase):
+class TestAwsRekognitionClient(unittest.TestCase):
 
     _client: AwsRekognitionClient
 
