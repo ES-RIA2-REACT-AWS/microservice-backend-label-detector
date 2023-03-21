@@ -1,5 +1,5 @@
 # -----------------------------------------------------------------------------------
-# File   :   client.py
+# File   :   config.py
 # Author :   Mélodie Ohan
 # Version:   16-03-2023 - original (dedicated to RIA1)
 # Remarks:   -
@@ -7,7 +7,7 @@
 
 from botocore.client import BaseClient
 import boto3
-from client.aws_credentials import AwsCredentials
+from config.aws_credentials import AwsCredentials
 
 
 class Client:
@@ -21,7 +21,7 @@ class Client:
         self._aws_credentials = AwsCredentials()
 
     def get_aws_client(self) -> BaseClient:
-        """Returns the aws client
+        """Returns the aws config
 
         :return: BaseClient
         """

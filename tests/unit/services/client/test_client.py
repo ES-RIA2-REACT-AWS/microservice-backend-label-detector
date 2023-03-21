@@ -1,6 +1,6 @@
 import unittest
 
-from client.client import Client
+from services.client.client import Client
 
 
 class TestClient(unittest.TestCase):

@@ -5,8 +5,8 @@
 # Remarks:   -
 # -----------------------------------------------------------------------------------
 
-from client.credentials import Credentials
-from client.errors.credentials_missing_config_value_error import CredentialsMissingConfigValueError
+from config.credentials import Credentials
+from config.errors.credentials_missing_config_value_error import CredentialsMissingConfigValueError
 
 
 class AwsCredentials(Credentials):

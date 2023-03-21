@@ -84,7 +84,7 @@ The development environment requires to:
 ```sh
 .
 ├── app
-│   ├── client
+│   ├── config
 │   ├── controllers
 │   ├── __init__.py
 │   ├── main.py
