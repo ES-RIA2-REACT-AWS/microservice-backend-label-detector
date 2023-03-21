@@ -5,8 +5,10 @@
 # Remarks:   -
 # -----------------------------------------------------------------------------------
 
-from botocore.client import BaseClient
 import boto3
+from botocore.client import BaseClient
+from boto3.exceptions import Boto3Error
+
 from config.aws_credentials import AwsCredentials
 
 
@@ -20,9 +22,12 @@ class AwsRekognitionClient:
         """Constructor
         """
         self._aws_credentials = AwsCredentials()
-        self._aws_client = boto3.client('rekognition', region_name=self._aws_credentials.region_name,
-                                        aws_access_key_id=self._aws_credentials.access_key_id,
-                                        aws_secret_access_key=self._aws_credentials.secret_access_key)
+        try:
+            self._aws_client = boto3.client('rekognition', region_name=self._aws_credentials.region_name,
+                                            aws_access_key_id=self._aws_credentials.access_key_id,
+                                            aws_secret_access_key=self._aws_credentials.secret_access_key)
+        except Boto3Error:
+            raise AwsRekognitionClient
 
     def __del__(self):
         self._aws_client.close()
