@@ -5,8 +5,5 @@
 # Remarks:   -
 # -----------------------------------------------------------------------------------
 
-from services.image_analyzer.errors.aws_rekognition_error import AwsRekognitionError
-
-
-class AwsRekognitionClientError(AwsRekognitionError):
+class AwsRekognitionClientError(Exception):
     pass
