@@ -8,7 +8,6 @@
 
 from fastapi import FastAPI, Request, status
 from fastapi.responses import JSONResponse
-from pydantic import ValidationError
 
 from controllers.label_detector_controller import router as label_detector_router
 
