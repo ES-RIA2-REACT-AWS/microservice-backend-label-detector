@@ -57,18 +57,9 @@ async def image_downloader_error_handler(request: Request, exc: ImageDownloaderE
     )
 
 
-@app.exception_handler(ValidationError)
-async def user_input_error_handler(request: Request, exc: ValidationError):
-    return JSONResponse(
-        status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-        content={"message": f"Invalid input values: {exc.errors()}"}
-    )
-
-
 def add_label_detector_handlers(main_app: FastAPI):
     main_app.add_exception_handler(CredentialsError, credentials_error_handler)
     main_app.add_exception_handler(AwsRekognitionServiceError, aws_rekognition_service_error_handler)
     main_app.add_exception_handler(AwsRekognitionClientError, aws_rekognition_client_error_handler)
     main_app.add_exception_handler(ImageDownloaderError, image_downloader_error_handler)
-    main_app.add_exception_handler(ValidationError, user_input_error_handler)
 
