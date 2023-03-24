@@ -27,7 +27,7 @@ class AwsRekognitionClient:
                                             aws_access_key_id=self._aws_credentials.access_key_id,
                                             aws_secret_access_key=self._aws_credentials.secret_access_key)
         except Boto3Error:
-            raise AwsRekognitionClient
+            raise AwsRekognitionClient("Cannot connect to image analysis service.")
 
     def __del__(self):
         self._aws_client.close()
