@@ -1,3 +1,10 @@
+# -----------------------------------------------------------------------------------
+# File   :   test_label_detector_analyze.py
+# Author :   Mélodie Ohan
+# Version:   24-03-2023 - original (dedicated to RIA1)
+# Remarks:   -
+# -----------------------------------------------------------------------------------
+
 import unittest
 import json
 from fastapi.testclient import TestClient
@@ -33,9 +40,9 @@ class TestLabelDetectorAnalyze(unittest.TestCase):
 
     # ----------------- Helpers   ----------------- #
     @classmethod
-    def _post(cls, root: str, data):
+    def _post(cls, route: str, data):
         """Use FastAPI TestClient post method to test our endpoint"""
-        return cls._client.post(root,
+        return cls._client.post(route,
                                 headers={"X-Token": "coneofsilence"},
                                 json=data)
 
