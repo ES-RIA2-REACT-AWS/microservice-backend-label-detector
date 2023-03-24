@@ -11,6 +11,7 @@ from fastapi.responses import JSONResponse
 from pydantic import ValidationError
 
 from controllers.label_detector_controller import router as label_detector_router
+
 from config.errors.credentials_error import CredentialsError
 from services.image_downloader.errors.image_downloader_error import ImageDownloaderError
 from services.image_analyzer.errors.aws_rekognition_client_error import AwsRekognitionClientError
@@ -57,7 +58,7 @@ async def image_downloader_error_handler(request: Request, exc: ImageDownloaderE
 
 
 @app.exception_handler(ValidationError)
-async def image_downloader_error_handler(request: Request, exc: ValidationError):
+async def user_input_error_handler(request: Request, exc: ValidationError):
     return JSONResponse(
         status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
         content={"message": f"Invalid input values: {exc.errors()}"}
@@ -65,10 +66,9 @@ async def image_downloader_error_handler(request: Request, exc: ValidationError)
 
 
 def add_label_detector_handlers(main_app: FastAPI):
-    """
-    Adds the error handling defined in this file to the main app passed as a parameter
-    """
-    main_app.add_exception_handler(credentials_error_handler, CredentialsError)
-    main_app.add_exception_handler(aws_rekognition_service_error_handler, AwsRekognitionServiceError)
-    main_app.add_exception_handler(aws_rekognition_client_error_handler, AwsRekognitionClientError)
-    main_app.add_exception_handler(image_downloader_error_handler, ImageDownloaderError)
+    main_app.add_exception_handler(CredentialsError, credentials_error_handler)
+    main_app.add_exception_handler(AwsRekognitionServiceError, aws_rekognition_service_error_handler)
+    main_app.add_exception_handler(AwsRekognitionClientError, aws_rekognition_client_error_handler)
+    main_app.add_exception_handler(ImageDownloaderError, image_downloader_error_handler)
+    main_app.add_exception_handler(ValidationError, user_input_error_handler)
+
