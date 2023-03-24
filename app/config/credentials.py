@@ -8,7 +8,7 @@
 import os
 from configparser import ConfigParser
 
-from client.errors.credentials_config_file_not_found_error import CredentialsConfigFileNotFoundError
+from config.errors.credentials_config_file_not_found_error import CredentialsConfigFileNotFoundError
 
 
 class Credentials:
