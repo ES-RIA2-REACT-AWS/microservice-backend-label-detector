@@ -74,19 +74,6 @@ class TestLabelDetectorAnalyze(unittest.TestCase):
         self.assertTrue(self._max_label_is_respected(response.json(), self._default_max_label))
         self.assertTrue(self._min_confidence_is_respected(response.json(), self._default_min_confidence))
 
-    def test_analyze_nominal_case_returns_labels(self):
-        # given
-        data = {
-            "image_url": self._image_url
-        }
-
-        # when
-        response = TestLabelDetectorAnalyze._post("/analyze", data)
-
-        # then
-        self.assertTrue(self._max_label_is_respected(response.json(), self._default_max_label))
-        self.assertTrue(self._min_confidence_is_respected(response.json(), self._default_min_confidence))
-
     def test_analyze_different_max_label_returns_labels(self):
         # given
         max_label: int = 4
