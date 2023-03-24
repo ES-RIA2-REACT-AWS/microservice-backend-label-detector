@@ -4,6 +4,10 @@ from pydantic import ValidationError
 
 
 class TestLabelDetectorModel(unittest.TestCase):
+
+    _default_nb_label: int = 10
+    _default_confidence: float = 0.7
+
     _image_url: str = "https://example.com/img.png"
     _max_label: int = 4
     _min_confidence_level: float = 0.8
@@ -41,6 +45,18 @@ class TestLabelDetectorModel(unittest.TestCase):
         self.assertEqual(ldm.image_url, input_data["image_url"])
         self.assertEqual(ldm.max_label, input_data["max_label"])
         self.assertEqual(ldm.min_confidence_level, input_data["min_confidence_level"])
+
+    def test_constructor_default_values_success(self):
+        # given
+        # refer to class attributes
+
+        # when
+        ldm = LabelDetectorModel(image_url=self._image_url)
+
+        # then
+        self.assertEqual(ldm.image_url, self._image_url)
+        self.assertEqual(ldm.max_label, self._default_nb_label)
+        self.assertEqual(ldm.min_confidence_level, self._default_confidence)
 
     def test_constructor_missing_image_url_raises_exception(self):
         # given

@@ -10,10 +10,9 @@ from pydantic import BaseModel, validator, HttpUrl, Field
 
 class LabelDetectorModel(BaseModel):
 
-    # There is no default value for these attributes, None raises Validator exceptions
     image_url: HttpUrl = Field(...)
-    max_label: int = Field(..., ge=1, le=100)
-    min_confidence_level: float = Field(..., ge=0.0, le=1.0)
+    max_label: int = Field(10, ge=1, le=100)
+    min_confidence_level: float = Field(0.7, ge=0.0, le=1.0)
 
     class Config:
         """LabelDetectorModel validator rules"""
