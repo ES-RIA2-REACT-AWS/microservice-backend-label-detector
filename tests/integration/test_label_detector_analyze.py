@@ -61,7 +61,7 @@ class TestLabelDetectorAnalyze(unittest.TestCase):
         }
 
         # when
-        response = TestLabelDetectorController._post("/analyze", data)
+        response = TestLabelDetectorAnalyze._post("/analyze", data)
 
         # then
         self.assertTrue(self._max_label_is_respected(response.json(), self._default_max_label))
@@ -74,7 +74,7 @@ class TestLabelDetectorAnalyze(unittest.TestCase):
         }
 
         # when
-        response = TestLabelDetectorController._post("/analyze", data)
+        response = TestLabelDetectorAnalyze._post("/analyze", data)
 
         # then
         self.assertTrue(self._max_label_is_respected(response.json(), self._default_max_label))
@@ -89,7 +89,7 @@ class TestLabelDetectorAnalyze(unittest.TestCase):
         }
 
         # when
-        response = TestLabelDetectorController._post("/analyze", data)
+        response = TestLabelDetectorAnalyze._post("/analyze", data)
 
         # then
         self.assertTrue(self._max_label_is_respected(response.json(), max_label))
@@ -104,7 +104,7 @@ class TestLabelDetectorAnalyze(unittest.TestCase):
         }
 
         # when
-        response = TestLabelDetectorController._post("/analyze", data)
+        response = TestLabelDetectorAnalyze._post("/analyze", data)
 
         # then
         self.assertTrue(self._max_label_is_respected(response.json(), self._default_max_label))
@@ -121,7 +121,7 @@ class TestLabelDetectorAnalyze(unittest.TestCase):
         }
 
         # when
-        response = TestLabelDetectorController._post("/analyze", data)
+        response = TestLabelDetectorAnalyze._post("/analyze", data)
 
         # then
         self.assertTrue(self._max_label_is_respected(response.json(), max_label))
