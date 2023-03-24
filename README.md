@@ -1,5 +1,6 @@
 ![](https://img.shields.io/badge/Python-14354C?style=for-the-badge&logo=python&logoColor=white)
 ![](https://img.shields.io/badge/Amazon_AWS-232F3E?style=for-the-badge&logo=amazon-aws&logoColor=white)
+![]()
 
 # Microservice Backend Label Validator
 
@@ -9,6 +10,16 @@ AWS).
 The principle is the following, a link must be submitted to our API, the image behind the link will then be analyzed by
 an AI which will then detect objects, concepts, and scenes in an image (JPEG or PNG).
 The output will be the result of this analysis.
+
+## Table of content
+
+1. [Setting up dev](#setting-up-dev)
+2. [Run](#run)
+3. [Testing](#testing)
+4. [Docker](#docker)
+5. [Project directory structure](#project-directory-structure)
+6. [Contributing](#contributing)
+7. [License](#license)
 
 ## Setting up dev
 
@@ -36,53 +47,78 @@ pip3 install -r requirements.txt
 
 ### Local configuration
 
-- Set the project `app` directory to your `PYTHONPATH`.
-- Copy `./example.secret.credentials.ini` and rename it to `./secret.credentials.ini`.
+- Add to your `PYTHONPATH` the complete path to the project `app` directory.
+- Copy `./example.secret.credentials.ini` and name it `./secret.credentials.ini`.
 - Set the variable environment `CONFIG_FILE_PATH` to the path of your secret file `./secret.credentials.ini`
 - Set your credentials in `./secret.credentials.ini`
 
 > Your secret file can be wherever you want, you just need to set the environment variable `CONFIG_FILE_PATH` properly.
 
-#### Linux commands
-
-1. Set the project `app` directory to your `PYTHONPATH`.
+#### Linux environment
 
 ```sh
+# Set the project `app` directory to your `PYTHONPATH`.
 export PYTHONPATH="$PYTHONPATH:app"
-```
-
-2. Copy `./example.secret.credentials.ini` and rename it to `./secret.credentials.ini`.
-
-```sh
+# Copy `./example.secret.credentials.ini` and rename it to `./secret.credentials.ini`
 cp ./example.secret.credentials.ini ./secret.credentials.ini
-```
-
-3. Set the variable environment `CONFIG_FILE_PATH` to the path of your secret file `./secret.credentials.ini`
-
-```sh
+# Set the variable environment `CONFIG_FILE_PATH` to the path of your secret file `./secret.credentials.ini`
 export CONFIG_FILE_PATH="./secret.credentials.ini"
-```
+````
 
-4. Set your aws credentials.
+Then set your aws credentials.
 
-### Run
+## Run
 
-#### Local
-
-Run FastAPI
+Here is the `FastAPI` command to run the project
 
 ```sh
-uvicorn app.main:app --reload --port 3000
+uvicorn app.main:app --reload --port 5000
 ```
 
-### Configuration
+## Testing
 
-The development environment requires to:
+The tests can be run by the following `unittest` commands
 
-- Create the virtual environment
-- Add the `app` directory to the PYTHONPATH
-- Assign the environment variable
-- Installing the library prerequisites in `requirements.txt`
+```sh
+# Search all tests
+python -m unittest discover -v
+# Integration test only
+python -m unittest tests.integration.test_label_detector_analyze -v
+```
+
+## Docker
+
+### Docker requirements
+
+| Version                                                             | Description                          | 
+|---------------------------------------------------------------------|--------------------------------------|
+| [Docker 23.0.0](https://docs.docker.com/engine/install/ubuntu/)     | Set of PaaS                          |
+| [Docker Compose V2](https://docs.docker.com/compose/install/linux/) | tool for deploying Docker containers |
+
+### Docker compose
+
+The current project has 3 different containers implemented in the Dockerfile: `production`, `development` and `tests`.
+
+Procedure to run `development`:
+
+```sh
+docker compose build development
+docker compose up development -d
+```
+
+You should be able to access to the `Swagger tool` from `http://0.0.0.0:5000/docs#`.
+
+You can also run tests through this command:
+
+```sh
+docker compose exec development python -m unittest tests.integration.test_label_detector_analyze -v
+```
+
+Stop `development`
+
+```sh
+docker compose stop development
+```
 
 ## Project directory structure
 
@@ -97,6 +133,8 @@ The development environment requires to:
 │   ├── models
 │   └── services
 ├── config.env
+├── docker-compose.yaml
+├── Dockerfile
 ├── example.secret.credentials.ini
 ├── README.md
 ├── requirements.txt
@@ -105,16 +143,8 @@ The development environment requires to:
     ├── __init__.py
     ├── integration
     └── unit
-```
 
-| Directory          | Description                                              | 
-|--------------------|----------------------------------------------------------|
-| `app/`             | Project directory, contains the API, LabelDetector..     |
-| `app/tests/`       | Test directory, contains Unittests and Integration tests |
-| `app/controllers/` | -                                                        |
-| `app/models/`      | -                                                        |
-| `app/services/`    | -                                                        |
-| `app/handlers/`    | -                                                        |
+```
 
 ## Contributing
 
@@ -133,6 +163,6 @@ simply open an issue with the tag "enhancement". Don't forget to give the projec
 > If these packages are specific to the development environment, please create a new one:
 > `pip3 freeze > requirements_dev.txt`
 
-## Licence
+## License
 
 Distributed under the MIT License. See LICENSE for more information.
