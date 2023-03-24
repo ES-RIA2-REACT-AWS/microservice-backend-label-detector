@@ -1,62 +1,71 @@
+# -----------------------------------------------------------------------------------
+# File   :   label_detector_handler.py
+# Author :   Mélodie Ohan
+# Version:   21-03-2023 - original (dedicated to RIA1)
+# Remarks:   This file defines which server status code will be returned according to
+#            the exception categories.
+# -----------------------------------------------------------------------------------
+
 from fastapi import FastAPI, Request, status
 from fastapi.responses import JSONResponse
+from pydantic import ValidationError
 
 from controllers.label_detector_controller import router as label_detector_router
-
-from services.image_analyzer.errors.aws_rekognition_error import AwsRekognitionError
+from config.errors.credentials_error import CredentialsError
+from services.image_downloader.errors.image_downloader_error import ImageDownloaderError
 from services.image_analyzer.errors.aws_rekognition_client_error import AwsRekognitionClientError
-from services.image_analyzer.errors.aws_rekognition_download_failed_error import AwsRekognitionDownloadFailedError
-from config.errors.credentials_missing_config_value_error import CredentialsMissingConfigValueError
-from config.errors.credentials_config_file_not_found_error import CredentialsConfigFileNotFoundError
-
+from services.image_analyzer.errors.aws_rekognition_service_error import AwsRekognitionServiceError
 
 app = FastAPI()
 app.include_router(label_detector_router)
 
 
-@app.exception_handler(CredentialsMissingConfigValueError)
-async def credentials_missing_config_value_error_handler(request: Request, exc: CredentialsMissingConfigValueError):
-    return JSONResponse(
-        status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-        content={"message": "Unprocessable Content"},
-    )
+# ------------------------------  STATUS_CODE 5XX  -------------------------------
 
-
-@app.exception_handler(AwsRekognitionError)
-async def aws_rekognition_error_handler(request: Request, exc: AwsRekognitionError):
-    return JSONResponse(
-        status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-        content={"message": "Unprocessable Content"},
-    )
-
-
-@app.exception_handler(AwsRekognitionDownloadFailedError)
-async def aws_rekognition_download_failed_error_handler(request: Request, exc: AwsRekognitionDownloadFailedError):
-    return JSONResponse(
-        status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-        content={"message": "Unprocessable Content"},
-    )
-
-
-@app.exception_handler(CredentialsConfigFileNotFoundError)
-async def credentials_config_file_not_found_error_handler(request: Request, exc: CredentialsConfigFileNotFoundError):
+@app.exception_handler(CredentialsError)
+async def credentials_error_handler(request: Request, exc: CredentialsError):
     return JSONResponse(
         status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-        content={"message": "Internal Server Error"},
+        content={"message": "Incorrect server configuration"},
+    )
+
+
+@app.exception_handler(AwsRekognitionServiceError)
+async def aws_rekognition_service_error_handler(request: Request, exc: AwsRekognitionServiceError):
+    return JSONResponse(
+        status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+        content={"message": "Unable to perform image analysis"},
     )
 
 
 @app.exception_handler(AwsRekognitionClientError)
 async def aws_rekognition_client_error_handler(request: Request, exc: AwsRekognitionClientError):
     return JSONResponse(
-        status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-        content={"message": "Internal Server Error"},
+        status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+        content={"message": "Unable to access the service client"},
+    )
+
+
+# ------------------------------  STATUS_CODE 4XX  -------------------------------
+
+@app.exception_handler(ImageDownloaderError)
+async def image_downloader_error_handler(request: Request, exc: ImageDownloaderError):
+    return JSONResponse(
+        status_code=status.HTTP_400_BAD_REQUEST,
+        content={"message": "Cannot extract the image from the provided url."},
+    )
+
+
+@app.exception_handler(ValidationError)
+async def image_downloader_error_handler(request: Request, exc: ValidationError):
+    return JSONResponse(
+        status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+        content={"message": f"Invalid input values: {exc.errors()}"}
     )
 
 
 def add_label_detector_handlers(main_app: FastAPI):
-    main_app.add_exception_handler(CredentialsMissingConfigValueError, credentials_missing_config_value_error_handler)
-    main_app.add_exception_handler(AwsRekognitionError, aws_rekognition_error_handler)
-    main_app.add_exception_handler(AwsRekognitionDownloadFailedError, aws_rekognition_download_failed_error_handler)
-    main_app.add_exception_handler(CredentialsConfigFileNotFoundError, credentials_config_file_not_found_error_handler)
-    main_app.add_exception_handler(AwsRekognitionClientError, aws_rekognition_client_error_handler)
+    main_app.add_exception_handler(credentials_error_handler, CredentialsError)
+    main_app.add_exception_handler(aws_rekognition_service_error_handler, AwsRekognitionServiceError)
+    main_app.add_exception_handler(aws_rekognition_client_error_handler, AwsRekognitionClientError)
+    main_app.add_exception_handler(image_downloader_error_handler, ImageDownloaderError)
