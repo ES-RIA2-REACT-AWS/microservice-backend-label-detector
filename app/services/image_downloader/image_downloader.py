@@ -8,7 +8,7 @@
 import httpx
 from fastapi import status
 
-from services.image_downloader.errors.image_downloader_errors import ImageDownloaderError
+from services.image_downloader.errors.image_downloader_error import ImageDownloaderError
 
 
 class ImageDownloader:
