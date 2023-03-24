@@ -65,6 +65,9 @@ async def image_downloader_error_handler(request: Request, exc: ValidationError)
 
 
 def add_label_detector_handlers(main_app: FastAPI):
+    """
+    Adds the error handling defined in this file to the main app passed as a parameter
+    """
     main_app.add_exception_handler(credentials_error_handler, CredentialsError)
     main_app.add_exception_handler(aws_rekognition_service_error_handler, AwsRekognitionServiceError)
     main_app.add_exception_handler(aws_rekognition_client_error_handler, AwsRekognitionClientError)
