@@ -5,28 +5,30 @@
 # Remarks:   -
 # -----------------------------------------------------------------------------------
 
-from pydantic import BaseModel, validator
+from pydantic import BaseModel, validator, HttpUrl, Field
 
 
 class LabelDetectorModel(BaseModel):
-    image_url: str
-    max_label: int
-    min_confidence_level: float
+
+    # There is no default value for these attributes, None raises Validator exceptions
+    image_url: HttpUrl = Field(...)
+    max_label: int = Field(..., ge=1, le=100)
+    min_confidence_level: float = Field(..., ge=0.0, le=1.0)
+
+    class Config:
+        """LabelDetectorModel validator rules"""
+        extra = 'forbid'
+        allow_mutation = False
+        validate_all = True
 
     @validator('image_url')
-    def validate_image_url(cls, value: str):
-        if not value:
-            raise ValueError
+    def validate_image_url(cls, value: HttpUrl):
         return value
 
     @validator('max_label')
     def validate_max_label(cls, value: int):
-        if value <= 0:
-            raise ValueError
         return value
 
     @validator('min_confidence_level')
     def validate_min_confidence_level(cls, value: float):
-        if value < 0 or value > 1:
-            raise ValueError
         return value
