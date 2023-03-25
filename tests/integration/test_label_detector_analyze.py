@@ -7,6 +7,7 @@
 
 import unittest
 import json
+from fastapi import Response
 from fastapi.testclient import TestClient
 from main import app
 
@@ -46,16 +47,16 @@ class TestLabelDetectorAnalyze(unittest.TestCase):
                                 json=data)
 
     @staticmethod
-    def _min_confidence_is_respected(response_json: str, min_confidence: float) -> bool:
-        response_dict = json.loads(response_json)
+    def _min_confidence_is_respected(response: Response, min_confidence: float) -> bool:
+        response_dict = json.loads(response.json())
         for label in response_dict['labels']:
             if float(label['confidence']) < min_confidence * 100.:
                 return False
         return True
 
     @staticmethod
-    def _max_label_is_respected(response_json: str, max_label: int) -> bool:
-        response_dict = json.loads(response_json)
+    def _max_label_is_respected(response: Response, max_label: int) -> bool:
+        response_dict = json.loads(response.json())
         return len(response_dict['labels']) <= max_label
 
     # ---------------------------------------------- #
@@ -70,8 +71,8 @@ class TestLabelDetectorAnalyze(unittest.TestCase):
         response = TestLabelDetectorAnalyze._post("/analyze", data)
 
         # then
-        self.assertTrue(self._max_label_is_respected(response.json(), self._default_max_label))
-        self.assertTrue(self._min_confidence_is_respected(response.json(), self._default_min_confidence))
+        self.assertTrue(self._max_label_is_respected(response, self._default_max_label))
+        self.assertTrue(self._min_confidence_is_respected(response, self._default_min_confidence))
 
     def test_analyze_different_max_label_returns_labels(self):
         # given
@@ -85,8 +86,8 @@ class TestLabelDetectorAnalyze(unittest.TestCase):
         response = TestLabelDetectorAnalyze._post("/analyze", data)
 
         # then
-        self.assertTrue(self._max_label_is_respected(response.json(), max_label))
-        self.assertTrue(self._min_confidence_is_respected(response.json(), self._default_min_confidence))
+        self.assertTrue(self._max_label_is_respected(response, max_label))
+        self.assertTrue(self._min_confidence_is_respected(response, self._default_min_confidence))
 
     def test_analyze_different_min_confidence_returns_labels(self):
         # given
@@ -100,8 +101,8 @@ class TestLabelDetectorAnalyze(unittest.TestCase):
         response = TestLabelDetectorAnalyze._post("/analyze", data)
 
         # then
-        self.assertTrue(self._max_label_is_respected(response.json(), self._default_max_label))
-        self.assertTrue(self._min_confidence_is_respected(response.json(), min_confidence))
+        self.assertTrue(self._max_label_is_respected(response, self._default_max_label))
+        self.assertTrue(self._min_confidence_is_respected(response, min_confidence))
 
     def test_analyze_different_parameters_returns_labels(self):
         # given
@@ -117,5 +118,5 @@ class TestLabelDetectorAnalyze(unittest.TestCase):
         response = TestLabelDetectorAnalyze._post("/analyze", data)
 
         # then
-        self.assertTrue(self._max_label_is_respected(response.json(), max_label))
-        self.assertTrue(self._min_confidence_is_respected(response.json(), min_confidence))
+        self.assertTrue(self._max_label_is_respected(response, max_label))
+        self.assertTrue(self._min_confidence_is_respected(response, min_confidence))
