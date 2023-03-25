@@ -32,7 +32,7 @@ class AwsRekognitionService(ImageAnalyzerService):
             response = self._client.get_aws_client().detect_labels(
                 Image={'Bytes': image},
                 MaxLabels=max_label,
-                MinConfidence=min_confidence_level
+                MinConfidence=min_confidence_level*100.
             )
         except ClientError as e:
             raise AwsRekognitionServiceError(str(e))

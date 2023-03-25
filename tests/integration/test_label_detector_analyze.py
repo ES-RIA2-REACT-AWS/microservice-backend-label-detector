@@ -14,8 +14,7 @@ from main import app
 class TestLabelDetectorAnalyze(unittest.TestCase):
     _client: TestClient
 
-    _image_url: str = "https://i.natgeofe.com/n/874df281-d3e0-489a-98c0-6b8" \
-                      "40023b828/newyork_NationalGeographic_2328428_16x9.jpg"
+    _image_url: str = "https://mir-s3-cdn-cf.behance.net/project_modules/fs/b907f993179931.5e5e5fc07af3d.jpg"
 
     _default_max_label: int = 10
     _default_min_confidence: float = 0.7
@@ -50,7 +49,7 @@ class TestLabelDetectorAnalyze(unittest.TestCase):
     def _min_confidence_is_respected(response_json: str, min_confidence: float) -> bool:
         response_dict = json.loads(response_json)
         for label in response_dict['labels']:
-            if label['confidence'] < min_confidence * 100:
+            if float(label['confidence']) < min_confidence * 100.:
                 return False
         return True
 
@@ -76,7 +75,7 @@ class TestLabelDetectorAnalyze(unittest.TestCase):
 
     def test_analyze_different_max_label_returns_labels(self):
         # given
-        max_label: int = 4
+        max_label: int = 15
         data = {
             "image_url": self._image_url,
             "max_label": max_label
