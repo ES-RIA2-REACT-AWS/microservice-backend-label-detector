@@ -1,0 +1,41 @@
+# ${PROJECT_NAME} is a project env. variables defined in .env
+version: '3.8'
+services:
+  production:
+    userns_mode: container
+    image: ${PROJECT_NAME}:production
+    container_name: ${PROJECT_NAME}-production
+    build:
+      target: production
+    ports:
+      - "5000:5000"
+    environment:
+      - CONFIG_FILE_PATH=/run/secrets/secret_credentials
+    secrets:
+      - secret_credentials
+  development:
+    userns_mode: container
+    image: ${PROJECT_NAME}:development
+    container_name: ${PROJECT_NAME}-development
+    build:
+      target: development
+    ports:
+      - "5000:5000"
+    environment:
+      - CONFIG_FILE_PATH=/run/secrets/secret_credentials
+    secrets:
+      - secret_credentials
+  tests:
+    userns_mode: container
+    image: ${PROJECT_NAME}:tests
+    container_name: ${PROJECT_NAME}-tests
+    build:
+      target: tests
+    environment:
+      - CONFIG_FILE_PATH=/run/secrets/secret_credentials
+    secrets:
+      - secret_credentials
+
+secrets:
+  secret_credentials:
+    file: ./secret.credentials.ini
