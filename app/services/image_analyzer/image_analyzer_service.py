@@ -26,6 +26,3 @@ class ImageAnalyzerService:
         :return: analysis result
         """
         raise NotImplementedError
-
-    def _download_image(self, image_url: str) -> bytes:
-        raise NotImplementedError
