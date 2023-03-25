@@ -5,15 +5,17 @@
 # Remarks:   -
 # -----------------------------------------------------------------------------------
 
-import requests
+
 import json
+import httpx
+from fastapi import status
 from botocore.exceptions import ClientError
 
 from models.label_detector_model import LabelDetectorModel
 from services.image_analyzer.aws_rekognition_client import AwsRekognitionClient
 from services.image_analyzer.image_analyzer_service import ImageAnalyzerService
 from services.image_analyzer.errors.aws_rekognition_service_error import AwsRekognitionServiceError
-from services.image_downloader.image_downloader import ImageDownloader
+from services.image_analyzer.errors.aws_rekognition_service_image_error import AwsRekognitionServiceImageError
 
 
 class AwsRekognitionService(ImageAnalyzerService):
@@ -21,7 +23,7 @@ class AwsRekognitionService(ImageAnalyzerService):
 
     async def analyze(self, input_data: LabelDetectorModel) -> json:
         self._client = AwsRekognitionClient()
-        image: bytes = await ImageDownloader.download(input_data.image_url)
+        image: bytes = await AwsRekognitionService._convert_to_bytes(input_data.image_url)
         response: dict = await self._submit_to_aws_rekognition(image,
                                                                input_data.max_label,
                                                                input_data.min_confidence_level)
@@ -39,7 +41,24 @@ class AwsRekognitionService(ImageAnalyzerService):
         return response
 
     @staticmethod
+    async def _convert_to_bytes(image_url: str) -> bytes:
+        """Downloads the image data from image_url and returns its content as bytes
+        :param image_url:
+        :return: bytes
+        """
+        async with httpx.AsyncClient() as client:
+            response = await client.get(image_url)
+            content_type = response.headers.get('Content-Type')
+        if response.status_code != status.HTTP_200_OK and 'image' not in content_type:
+            raise AwsRekognitionServiceImageError
+        return bytes(response.content)
+
+    @staticmethod
     def _format_output(json_input: dict) -> json:
+        """Format the
+        :param json_input:
+        :return:
+        """
         formatted_output = dict({})
         formatted_output["labels"] = []
         for label in json_input['Labels']:
