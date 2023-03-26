@@ -5,6 +5,9 @@
 # Remarks:   -
 # -----------------------------------------------------------------------------------
 
+from models.label_detector_model import LabelDetectorModel
+
+
 class ImageAnalyzerService:
     """ImageAnalyzerService
 
@@ -17,12 +20,9 @@ class ImageAnalyzerService:
         In order to "implement" ImageAnalyzerService, make your data object inherit from this class.
     """
 
-    async def analyze(self, image_url: str, max_label: int, min_confidence_level: float) -> dict:
+    async def analyze(self, input_data: LabelDetectorModel) -> dict:
         """
-        Analyze an image from an url according to the max_label and min_confidence_level parameters
-        :param image_url: str
-        :param max_label: int
-        :param min_confidence_level: float
+        Submits the analysis of a given image to an AI
         :return: analysis result
         """
         raise NotImplementedError
