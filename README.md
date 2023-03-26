@@ -1,6 +1,7 @@
 ![](https://img.shields.io/badge/Python-14354C?style=for-the-badge&logo=python&logoColor=white)
 ![](https://img.shields.io/badge/Amazon_AWS-232F3E?style=for-the-badge&logo=amazon-aws&logoColor=white)
-![]()
+![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white)
+
 
 # Microservice Backend Label Validator
 
@@ -39,33 +40,31 @@ cd microservice-backend-label-detector/
 git switch develop
 ```
 
+### Local configuration
+1. Add to your `PYTHONPATH` the complete path to the project `app` directory.
+    
+    **For Windows**:
+    Refer to this [post](https://stackoverflow.com/questions/3701646/how-to-add-to-the-pythonpath-in-windows-so-it-finds-my-modules-packages). Make sure to set the full path to the `app` folder
+
+    **For Linux**
+    ```shell
+    export PYTHONPATH="$PYTHONPATH:app"
+    ```
+2. Copy `./example.env` and name it `./.env`.
+3. Set your credentials and the project name in new `.env`
+4. If your IDE does not create the virtual environment you need to create it yourself:
+    ```sh
+    python3 -m venv .venv
+    ```
+   To activate it, run this command: `source .venv/bin/activate`
+   To deactivate it, run this command: `source .venv/bin/deactivate` 
+   For Windows, refer to the official [documentation](https://docs.python.org/3/tutorial/venv.html).
+
 ### Install dependencies
 
 ```sh
 pip3 install -r requirements.txt 
 ```
-
-### Local configuration
-
-- Add to your `PYTHONPATH` the complete path to the project `app` directory.
-- Copy `./example.secret.credentials.ini` and name it `./secret.credentials.ini`.
-- Set the variable environment `CONFIG_FILE_PATH` to the path of your secret file `./secret.credentials.ini`
-- Set your credentials in `./secret.credentials.ini`
-
-> Your secret file can be wherever you want, you just need to set the environment variable `CONFIG_FILE_PATH` properly.
-
-#### Linux environment
-
-```sh
-# Set the project `app` directory to your `PYTHONPATH`.
-export PYTHONPATH="$PYTHONPATH:app"
-# Copy `./example.secret.credentials.ini` and rename it to `./secret.credentials.ini`
-cp ./example.secret.credentials.ini ./secret.credentials.ini
-# Set the variable environment `CONFIG_FILE_PATH` to the path of your secret file `./secret.credentials.ini`
-export CONFIG_FILE_PATH="./secret.credentials.ini"
-````
-
-Then set your aws credentials.
 
 ## Run
 
@@ -79,14 +78,22 @@ uvicorn app.main:app --reload --port 5000
 
 The tests can be run by the following `unittest` commands
 
+Run all tests:
 ```sh
-# Search all tests
-python -m unittest discover -v
-# Integration test only
-python -m unittest tests.integration.test_label_detector_analyze -v
+python3 -m unittest discover -v
+```
+
+Run the integration test:
+```sh
+python3 -m unittest tests.integration.test_label_detector_analyze -v
 ```
 
 ## Docker
+
+The current project has 3 different images implemented in the `Dockerfile`.
+- `ria2_label_detector_aws:production` : Run FastAPI.
+- `ria2_label_detector_aws:development` : Contains the test directory, start by running FastAPI
+- `ria2_label_detector_aws:tests` : Run unit and integration tests
 
 ### Docker requirements
 
@@ -97,54 +104,58 @@ python -m unittest tests.integration.test_label_detector_analyze -v
 
 ### Docker compose
 
-The current project has 3 different containers implemented in the Dockerfile: `production`, `development` and `tests`.
+The current project has 3 different services implemented in the `docker-compose.yml`: `production`, `development` and `tests`.
 
 Procedure to run `development`:
+1. Build
+    ```sh
+    docker compose build development
+    ```
+2. Run
+    ```sh
+    docker compose up development -d
+    ```
+    You should be able to access to the `Swagger tool` from `http://0.0.0.0:5000/docs#`.
 
-```sh
-docker compose build development
-docker compose up development -d
-```
+3. You can also run tests through this command: `compose exec development`
+    ```sh
+    docker compose exec development python -m unittest tests.integration.test_label_detector_analyze -v
+    ```
 
-You should be able to access to the `Swagger tool` from `http://0.0.0.0:5000/docs#`.
-
-You can also run tests through this command:
-
-```sh
-docker compose exec development python -m unittest tests.integration.test_label_detector_analyze -v
-```
-
-Stop `development`
-
-```sh
-docker compose stop development
-```
+4. Stop `development`
+    ```sh
+    docker compose stop development
+    ```
 
 ## Project directory structure
 
 ```sh
 .
 ├── app
-│   ├── config
 │   ├── controllers
 │   ├── handlers
 │   ├── __init__.py
 │   ├── main.py
 │   ├── models
 │   └── services
-├── config.env
-├── docker-compose.yaml
+├── docker-compose.yml
 ├── Dockerfile
-├── example.secret.credentials.ini
+├── example.env
 ├── README.md
 ├── requirements.txt
-├── secret.credentials.ini
 └── tests
     ├── __init__.py
     ├── integration
     └── unit
-
 ```
+
+- `controllers`: contains the controller in which the POST method is submitted
+- `handlers`   : contains the handlers that translate service exceptions into server errors
+- `models`     : contains the expected input data models
+- `services`   : contains the API services
+- `tests`      : contains the unit and integration tests
+- `main.py`    : application entry point
+- `example.env`: project config file that contains the required env variables (credentials etc..)
 
 ## Contributing
 
