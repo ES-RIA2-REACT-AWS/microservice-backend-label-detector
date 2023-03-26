@@ -141,6 +141,7 @@ Procedure to run `development`:
 ├── docker-compose.yml
 ├── Dockerfile
 ├── example.env
+├── LICENSE
 ├── README.md
 ├── requirements.txt
 └── tests
