@@ -6,26 +6,23 @@
 # -----------------------------------------------------------------------------------
 
 import boto3
+from os import getenv
 from botocore.client import BaseClient
 from boto3.exceptions import Boto3Error
-
-from config.aws_credentials import AwsCredentials
 
 
 class AwsRekognitionClient:
     """Provides clients from storage services"""
 
-    _aws_credentials: AwsCredentials
     _aws_client: BaseClient
 
     def __init__(self):
         """Constructor
         """
-        self._aws_credentials = AwsCredentials()
         try:
-            self._aws_client = boto3.client('rekognition', region_name=self._aws_credentials.region_name,
-                                            aws_access_key_id=self._aws_credentials.access_key_id,
-                                            aws_secret_access_key=self._aws_credentials.secret_access_key)
+            self._aws_client = boto3.client('rekognition', region_name=getenv("AWS_REGION_NAME"),
+                                            aws_access_key_id=getenv("AWS_ACCESS_KEY_ID"),
+                                            aws_secret_access_key=getenv("AWS_SECRET_ACCESS_KEY"))
         except Boto3Error:
             raise AwsRekognitionClient("Cannot connect to image analysis service.")
 

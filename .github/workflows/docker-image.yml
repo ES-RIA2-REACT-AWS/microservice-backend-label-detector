@@ -5,3 +5,23 @@ on:
     branches: [ "develop", "main" ]
   pull_request:
     branches: [ "develop", "main" ]
+
+jobs:
+  test:
+    name: Run test suite and verify code coverage
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Build the Docker image
+        run:  docker build . --tag ria2_label_detector_aws-tests  --file Dockerfile --target tests
+      - name: Create project env file
+        run: echo "" >> .env
+      - name: Run the integrations tests
+        run: |
+          docker run \
+          -e AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }} \
+          -e AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }} \
+          -e AWS_REGION_NAME=${{ secrets.AWS_REGION_NAME }} \
+          ria2_label_detector_aws-tests:tests

@@ -9,10 +9,9 @@ services:
       target: production
     ports:
       - "5000:5000"
-    environment:
-      - CONFIG_FILE_PATH=/run/secrets/secret_credentials
-    secrets:
-      - secret_credentials
+    env_file:
+        - .env
+
   development:
     userns_mode: container
     image: ${PROJECT_NAME}:development
@@ -21,21 +20,14 @@ services:
       target: development
     ports:
       - "5000:5000"
-    environment:
-      - CONFIG_FILE_PATH=/run/secrets/secret_credentials
-    secrets:
-      - secret_credentials
+    env_file:
+      - .env
+
   tests:
     userns_mode: container
     image: ${PROJECT_NAME}:tests
     container_name: ${PROJECT_NAME}-tests
     build:
       target: tests
-    environment:
-      - CONFIG_FILE_PATH=/run/secrets/secret_credentials
-    secrets:
-      - secret_credentials
-
-secrets:
-  secret_credentials:
-    file: ./secret.credentials.ini
+    env_file:
+        - .env

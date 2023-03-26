@@ -6,7 +6,6 @@
 # -----------------------------------------------------------------------------------
 
 import unittest
-import json
 from fastapi import Response
 from fastapi.testclient import TestClient
 from main import app
@@ -43,12 +42,12 @@ class TestLabelDetectorAnalyze(unittest.TestCase):
     def _post(cls, route: str, data):
         """Use FastAPI TestClient post method to test our endpoint"""
         return cls._client.post(route,
-                                headers={"X-Token": "coneofsilence"},
+                                headers={"X-Token": "coneofsilence", "Content-Type": "application/json"},
                                 json=data)
 
     @staticmethod
     def _min_confidence_is_respected(response: Response, min_confidence: float) -> bool:
-        response_dict = json.loads(response.json())
+        response_dict = response.json()
         for label in response_dict['labels']:
             if float(label['confidence']) < min_confidence * 100.:
                 return False
@@ -56,7 +55,7 @@ class TestLabelDetectorAnalyze(unittest.TestCase):
 
     @staticmethod
     def _max_label_is_respected(response: Response, max_label: int) -> bool:
-        response_dict = json.loads(response.json())
+        response_dict = response.json()
         return len(response_dict['labels']) <= max_label
 
     # ---------------------------------------------- #
