@@ -50,7 +50,7 @@ git switch develop
     ```shell
     export PYTHONPATH="$PYTHONPATH:app"
     ```
-2. Copy `./example.env` and name it `./.env`.
+2. Copy `./.env.example` and name it `./.env`.
 3. Set your credentials and the project name in new `.env`
 4. If your IDE does not create the virtual environment you need to create it yourself:
     ```sh
@@ -140,7 +140,7 @@ Procedure to run `development`:
 │   └── services
 ├── docker-compose.yml
 ├── Dockerfile
-├── example.env
+├── .env.example
 ├── LICENSE
 ├── README.md
 ├── requirements.txt
@@ -156,7 +156,7 @@ Procedure to run `development`:
 - `services`   : contains the API services
 - `tests`      : contains the unit and integration tests
 - `main.py`    : application entry point
-- `example.env`: project config file that contains the required env variables (credentials etc..)
+- `.env.example`: project config file that contains the required env variables (credentials etc..)
 
 ## Contributing
 
