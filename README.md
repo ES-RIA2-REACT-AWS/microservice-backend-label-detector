@@ -40,7 +40,7 @@ cd microservice-backend-label-detector/
 git switch develop
 ```
 
-### Local configuration
+### Development environment
 1. Add to your `PYTHONPATH` the complete path to the project `app` directory.
     
     **For Windows**:
@@ -119,7 +119,7 @@ Procedure to run `development`:
 
 3. You can also run tests through this command: `compose exec development`
     ```sh
-    docker compose exec development python -m unittest tests.integration.test_label_detector_analyze -v
+    docker compose exec development python3 -m unittest discover -v
     ```
 
 4. Stop `development`
