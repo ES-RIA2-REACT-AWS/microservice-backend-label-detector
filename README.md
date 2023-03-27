@@ -78,7 +78,7 @@ To install and run this project locally, follow these steps:
 pip3 install -r requirements.txt 
 ```
 
-## Run
+### Run
 
 Here is the `FastAPI` command to run the project
 
@@ -86,7 +86,14 @@ Here is the `FastAPI` command to run the project
 uvicorn app.main:app --reload --port 5000
 ```
 
-## Testing
+FastAPI has the [Swagger UI](https://fastapi.tiangolo.com/features/#automatic-docs) tool integrated. 
+Follow these step if you want to use it:
+1. Run the project with `uvicorn app.main:app --reload --port 5000` command.
+2. Open your Browser and navigate to [http://127.0.0.1:5000/docs](http://127.0.0.1:5000/)
+3. Clic on `Try it out`
+4. You can copy past your `image_url`, `max_label` and `min_confidence_level`
+
+### Testing
 The test framework for this project is [unittest](https://docs.python.org/3/library/unittest.html)
 
 The tests can be run by the following commands:
@@ -100,13 +107,6 @@ Run the integration test:
 ```sh
 python3 -m unittest tests.integration.test_label_detector_analyze -v
 ```
-
-You can also directly test manually our project through the integrated Swagger.
-1. Run the project with `uvicorn app.main:app --reload --port 5000` command.
-2. Open your Browser and navigate to [http://127.0.0.1:5000/docs#/default/analyze_analyze_post](http://127.0.0.1:5000/docs#/default/analyze_analyze_post)
-3. Clic on `Try it out`
-4. You can copy past your `image_url`, `max_label` and `min_confidence_level`
-   
 
 ## Docker
 
