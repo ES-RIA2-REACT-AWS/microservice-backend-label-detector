@@ -8,19 +8,27 @@
 The goal of this project is to implement a microservice allowing the analysis of an image using the DetectLabels API (
 AWS).
 
-The principle is the following, a link must be submitted to our API, the image behind the link will then be analyzed by
-an AI which will then detect objects, concepts, and scenes in an image (JPEG or PNG).
-The output will be the result of this analysis.
+The principle is the following, a link must be submitted to our API, the image behind the link will be analyzed by
+an AI which will detect objects, concepts, and scenes.
+
+In this project we will use AWS rekognition.
 
 ## Table of content
 
 1. [Setting up dev](#setting-up-dev)
-2. [Run](#run)
-3. [Testing](#testing)
-4. [Docker](#docker)
-5. [Project directory structure](#project-directory-structure)
-6. [Contributing](#contributing)
-7. [License](#license)
+   1. [Requirements](#requirements)
+   2. [Clone repository](#clone-repository)
+   3. [Configuration](#configuration)
+   4. [Dependencies installation](#dependencies-installation)
+   5. [Run](#run)
+   6. [Testing](#testing)
+2. [Docker](#docker)
+   1. [Docker requirements](#docker-requirements)
+   2. [Docker compose](#docker-compose)
+3. [Project directory structure](#project-directory-structure)
+4. [Contributing](#contributing)
+5. [Credits](#credits)
+6. [License](#license)
 
 ## Setting up dev
 
@@ -40,8 +48,12 @@ cd microservice-backend-label-detector/
 git switch develop
 ```
 
-### Development environment
-1. Add to your `PYTHONPATH` the complete path to the project `app` directory.
+### Configuration
+To install and run this project locally, follow these steps:
+
+1. Clone this repository onto your local machine.
+2. Open a terminal window and navigate to the root directory of the project.
+3. Add to your `PYTHONPATH` the complete path to the project `app` directory.
     
     **For Windows**:
     Refer to this [post](https://stackoverflow.com/questions/3701646/how-to-add-to-the-pythonpath-in-windows-so-it-finds-my-modules-packages). Make sure to set the full path to the `app` folder
@@ -50,9 +62,9 @@ git switch develop
     ```shell
     export PYTHONPATH="$PYTHONPATH:app"
     ```
-2. Copy `./.env.example` and name it `./.env`.
-3. Set your credentials and the project name in new `.env`
-4. If your IDE does not create the virtual environment you need to create it yourself:
+4. Copy `./.env.example` and name it `./.env`.
+5. Set your credentials and the project name in new `.env`
+6. If your IDE does not create the virtual environment you need to create it yourself:
     ```sh
     python3 -m venv .venv
     ```
@@ -60,7 +72,7 @@ git switch develop
    To deactivate it, run this command: `source .venv/bin/deactivate` 
    For Windows, refer to the official [documentation](https://docs.python.org/3/tutorial/venv.html).
 
-### Install dependencies
+###  Dependencies installation
 
 ```sh
 pip3 install -r requirements.txt 
@@ -75,8 +87,9 @@ uvicorn app.main:app --reload --port 5000
 ```
 
 ## Testing
+The test framework for this project is [unittest](https://docs.python.org/3/library/unittest.html)
 
-The tests can be run by the following `unittest` commands
+The tests can be run by the following commands:
 
 Run all tests:
 ```sh
@@ -87,6 +100,13 @@ Run the integration test:
 ```sh
 python3 -m unittest tests.integration.test_label_detector_analyze -v
 ```
+
+You can also directly test manually our project through the integrated Swagger.
+1. Run the project with `uvicorn app.main:app --reload --port 5000` command.
+2. Open your Browser and navigate to [http://127.0.0.1:5000/docs#/default/analyze_analyze_post](http://127.0.0.1:5000/docs#/default/analyze_analyze_post)
+3. Clic on `Try it out`
+4. You can copy past your `image_url`, `max_label` and `min_confidence_level`
+   
 
 ## Docker
 
@@ -175,6 +195,13 @@ simply open an issue with the tag "enhancement". Don't forget to give the projec
 > If these packages are specific to the development environment, please create a new one:
 > `pip3 freeze > requirements_dev.txt`
 
+## Credits
+This project uses the following technologies:
+
+- FastApi
+- Pydantic validators
+- Python Unittest
+
 ## License
 
-Distributed under the MIT License. See LICENSE for more information.
+This project is licensed under the [MIT License](https://opensource.org/licenses/MIT). See the LICENSE file for more details
