@@ -6,12 +6,11 @@
 # Microservice Backend Label Validator
 
 The goal of this project is to implement a microservice allowing the analysis of an image using the DetectLabels API (
-AWS).
+ AWS rekognition).
 
 The principle is the following, a link must be submitted to our API, the image behind the link will be analyzed by
 an AI which will detect objects, concepts, and scenes.
 
-In this project we will use AWS rekognition.
 
 ## Table of content
 
@@ -29,6 +28,7 @@ In this project we will use AWS rekognition.
 4. [Contributing](#contributing)
 5. [Credits](#credits)
 6. [License](#license)
+7. [Best practices](#best-practices)
 
 ## Setting up dev
 
@@ -205,3 +205,18 @@ This project uses the following technologies:
 ## License
 
 This project is licensed under the [MIT License](https://opensource.org/licenses/MIT). See the LICENSE file for more details
+
+## Best practices
+
+Practices and documentation on which this project is based:
+
+- [Python Style Guide (PEP 8)](https://peps.python.org/pep-0008/)
+- [Python naming convention (PEP8)](https://peps.python.org/pep-0008/#naming-conventions)
+- [Docker best practices](https://docs.docker.com/develop/develop-images/dockerfile_best-practices/)
+- [FastAPI documentation](https://fastapi.tiangolo.com/)
+- [Unittest documentation](https://docs.python.org/3/library/unittest.html)
+- [Pydantic validators](https://docs.pydantic.dev/usage/validators/)
+
+### Notes
+The snake case naming convention is not respected in the `unit and integration tests` for the methods: `setUpClass`, `tearDownClass`, `tearDown` and `setUp`. These are the methods of the test framework. 
+Unittest being based on Jest, it does not respect the python naming convention.
