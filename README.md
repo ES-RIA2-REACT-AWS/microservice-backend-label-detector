@@ -1,25 +1,34 @@
 ![](https://img.shields.io/badge/Python-14354C?style=for-the-badge&logo=python&logoColor=white)
 ![](https://img.shields.io/badge/Amazon_AWS-232F3E?style=for-the-badge&logo=amazon-aws&logoColor=white)
-![]()
+![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white)
+
 
 # Microservice Backend Label Validator
 
 The goal of this project is to implement a microservice allowing the analysis of an image using the DetectLabels API (
 AWS).
 
-The principle is the following, a link must be submitted to our API, the image behind the link will then be analyzed by
-an AI which will then detect objects, concepts, and scenes in an image (JPEG or PNG).
-The output will be the result of this analysis.
+The principle is the following, a link must be submitted to our API, the image behind the link will be analyzed by
+an AI which will detect objects, concepts, and scenes.
+
+In this project we will use AWS rekognition.
 
 ## Table of content
 
 1. [Setting up dev](#setting-up-dev)
-2. [Run](#run)
-3. [Testing](#testing)
-4. [Docker](#docker)
-5. [Project directory structure](#project-directory-structure)
-6. [Contributing](#contributing)
-7. [License](#license)
+   1. [Requirements](#requirements)
+   2. [Clone repository](#clone-repository)
+   3. [Configuration](#configuration)
+   4. [Dependencies installation](#dependencies-installation)
+   5. [Run](#run)
+   6. [Testing](#testing)
+2. [Docker](#docker)
+   1. [Docker requirements](#docker-requirements)
+   2. [Docker compose](#docker-compose)
+3. [Project directory structure](#project-directory-structure)
+4. [Contributing](#contributing)
+5. [Credits](#credits)
+6. [License](#license)
 
 ## Setting up dev
 
@@ -39,35 +48,37 @@ cd microservice-backend-label-detector/
 git switch develop
 ```
 
-### Install dependencies
+### Configuration
+To install and run this project locally, follow these steps:
+
+1. Clone this repository onto your local machine.
+2. Open a terminal window and navigate to the root directory of the project.
+3. Add to your `PYTHONPATH` the complete path to the project `app` directory.
+    
+    **For Windows**:
+    Refer to this [post](https://stackoverflow.com/questions/3701646/how-to-add-to-the-pythonpath-in-windows-so-it-finds-my-modules-packages). Make sure to set the full path to the `app` folder
+
+    **For Linux**
+    ```shell
+    export PYTHONPATH="$PYTHONPATH:app"
+    ```
+4. Copy `./.env.example` and name it `./.env`.
+5. Set your credentials and the project name in new `.env`
+6. If your IDE does not create the virtual environment you need to create it yourself:
+    ```sh
+    python3 -m venv .venv
+    ```
+   To activate it, run this command: `source .venv/bin/activate`
+   To deactivate it, run this command: `source .venv/bin/deactivate` 
+   For Windows, refer to the official [documentation](https://docs.python.org/3/tutorial/venv.html).
+
+###  Dependencies installation
 
 ```sh
 pip3 install -r requirements.txt 
 ```
 
-### Local configuration
-
-- Add to your `PYTHONPATH` the complete path to the project `app` directory.
-- Copy `./example.secret.credentials.ini` and name it `./secret.credentials.ini`.
-- Set the variable environment `CONFIG_FILE_PATH` to the path of your secret file `./secret.credentials.ini`
-- Set your credentials in `./secret.credentials.ini`
-
-> Your secret file can be wherever you want, you just need to set the environment variable `CONFIG_FILE_PATH` properly.
-
-#### Linux environment
-
-```sh
-# Set the project `app` directory to your `PYTHONPATH`.
-export PYTHONPATH="$PYTHONPATH:app"
-# Copy `./example.secret.credentials.ini` and rename it to `./secret.credentials.ini`
-cp ./example.secret.credentials.ini ./secret.credentials.ini
-# Set the variable environment `CONFIG_FILE_PATH` to the path of your secret file `./secret.credentials.ini`
-export CONFIG_FILE_PATH="./secret.credentials.ini"
-````
-
-Then set your aws credentials.
-
-## Run
+### Run
 
 Here is the `FastAPI` command to run the project
 
@@ -75,18 +86,34 @@ Here is the `FastAPI` command to run the project
 uvicorn app.main:app --reload --port 5000
 ```
 
-## Testing
+FastAPI has the [Swagger UI](https://fastapi.tiangolo.com/features/#automatic-docs) tool integrated. 
+Follow these step if you want to use it:
+1. Run the project with `uvicorn app.main:app --reload --port 5000` command.
+2. Open your Browser and navigate to [http://127.0.0.1:5000/docs](http://127.0.0.1:5000/)
+3. Clic on `Try it out`
+4. You can copy past your `image_url`, `max_label` and `min_confidence_level`
 
-The tests can be run by the following `unittest` commands
+### Testing
+The test framework for this project is [unittest](https://docs.python.org/3/library/unittest.html)
 
+The tests can be run by the following commands:
+
+Run all tests:
 ```sh
-# Search all tests
-python -m unittest discover -v
-# Integration test only
-python -m unittest tests.integration.test_label_detector_analyze -v
+python3 -m unittest discover -v
+```
+
+Run the integration test:
+```sh
+python3 -m unittest tests.integration.test_label_detector_analyze -v
 ```
 
 ## Docker
+
+The current project has 3 different images implemented in the `Dockerfile`.
+- `ria2_label_detector_aws:production` : Run FastAPI.
+- `ria2_label_detector_aws:development` : Contains the test directory, start by running FastAPI
+- `ria2_label_detector_aws:tests` : Run unit and integration tests
 
 ### Docker requirements
 
@@ -97,54 +124,59 @@ python -m unittest tests.integration.test_label_detector_analyze -v
 
 ### Docker compose
 
-The current project has 3 different containers implemented in the Dockerfile: `production`, `development` and `tests`.
+The current project has 3 different services implemented in the `docker-compose.yml`: `production`, `development` and `tests`.
 
 Procedure to run `development`:
+1. Build
+    ```sh
+    docker compose build development
+    ```
+2. Run
+    ```sh
+    docker compose up development -d
+    ```
+    You should be able to access to the `Swagger tool` from `http://0.0.0.0:5000/docs#`.
 
-```sh
-docker compose build development
-docker compose up development -d
-```
+3. You can also run tests through this command: `compose exec development`
+    ```sh
+    docker compose exec development python3 -m unittest discover -v
+    ```
 
-You should be able to access to the `Swagger tool` from `http://0.0.0.0:5000/docs#`.
-
-You can also run tests through this command:
-
-```sh
-docker compose exec development python -m unittest tests.integration.test_label_detector_analyze -v
-```
-
-Stop `development`
-
-```sh
-docker compose stop development
-```
+4. Stop `development`
+    ```sh
+    docker compose stop development
+    ```
 
 ## Project directory structure
 
 ```sh
 .
 ├── app
-│   ├── config
 │   ├── controllers
 │   ├── handlers
 │   ├── __init__.py
 │   ├── main.py
 │   ├── models
 │   └── services
-├── config.env
-├── docker-compose.yaml
+├── docker-compose.yml
 ├── Dockerfile
-├── example.secret.credentials.ini
+├── .env.example
+├── LICENSE
 ├── README.md
 ├── requirements.txt
-├── secret.credentials.ini
 └── tests
     ├── __init__.py
     ├── integration
     └── unit
-
 ```
+
+- `controllers`: contains the controller in which the POST method is submitted
+- `handlers`   : contains the handlers that translate service exceptions into server errors
+- `models`     : contains the expected input data models
+- `services`   : contains the API services
+- `tests`      : contains the unit and integration tests
+- `main.py`    : application entry point
+- `.env.example`: project config file that contains the required env variables (credentials etc..)
 
 ## Contributing
 
@@ -163,6 +195,13 @@ simply open an issue with the tag "enhancement". Don't forget to give the projec
 > If these packages are specific to the development environment, please create a new one:
 > `pip3 freeze > requirements_dev.txt`
 
+## Credits
+This project uses the following technologies:
+
+- FastApi
+- Pydantic validators
+- Python Unittest
+
 ## License
 
-Distributed under the MIT License. See LICENSE for more information.
+This project is licensed under the [MIT License](https://opensource.org/licenses/MIT). See the LICENSE file for more details

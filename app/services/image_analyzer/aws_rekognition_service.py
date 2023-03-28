@@ -6,9 +6,8 @@
 # -----------------------------------------------------------------------------------
 
 
-import json
 import httpx
-from fastapi import status
+from fastapi import status, Response
 from botocore.exceptions import ClientError
 
 from models.label_detector_model import LabelDetectorModel
@@ -21,20 +20,21 @@ from services.image_analyzer.errors.aws_rekognition_service_image_error import A
 class AwsRekognitionService(ImageAnalyzerService):
     _client: AwsRekognitionClient
 
-    async def analyze(self, input_data: LabelDetectorModel) -> json:
+    def __init__(self):
         self._client = AwsRekognitionClient()
-        image: bytes = await AwsRekognitionService._convert_to_bytes(input_data.image_url)
-        response: dict = await self._submit_to_aws_rekognition(image,
-                                                               input_data.max_label,
-                                                               input_data.min_confidence_level)
-        return AwsRekognitionService._format_output(response)
 
-    async def _submit_to_aws_rekognition(self, image: bytes, max_label: int, min_confidence_level: float) -> dict:
+    async def analyze(self, input_data: LabelDetectorModel) -> dict:
+        image: bytes = await AwsRekognitionService._convert_to_bytes(input_data.image_url)
+        response: Response = await self._submit_to_aws_rekognition(image, input_data.max_label,
+                                                                   input_data.min_confidence_level)
+        return AwsRekognitionService._extract_labels(response)
+
+    async def _submit_to_aws_rekognition(self, image: bytes, max_label: int, min_confidence_level: float) -> Response:
         try:
             response = self._client.get_aws_client().detect_labels(
                 Image={'Bytes': image},
                 MaxLabels=max_label,
-                MinConfidence=min_confidence_level*100.
+                MinConfidence=min_confidence_level * 100.
             )
         except ClientError as e:
             raise AwsRekognitionServiceError(str(e))
@@ -43,7 +43,7 @@ class AwsRekognitionService(ImageAnalyzerService):
     @staticmethod
     async def _convert_to_bytes(image_url: str) -> bytes:
         """Downloads the image data from image_url and returns its content as bytes
-        :param image_url:
+        :param image_url: str
         :return: bytes
         """
         async with httpx.AsyncClient() as client:
@@ -54,13 +54,14 @@ class AwsRekognitionService(ImageAnalyzerService):
         return bytes(response.content)
 
     @staticmethod
-    def _format_output(json_input: dict) -> json:
-        """Format the
-        :param json_input:
-        :return:
+    def _extract_labels(response: Response) -> dict:
         """
-        formatted_output = dict({})
-        formatted_output["labels"] = []
-        for label in json_input['Labels']:
-            formatted_output['labels'].append({'name': label['Name'], 'confidence': label['Confidence']})
-        return json.dumps(formatted_output)
+        Retrieves the labels from the server response
+        :param response:
+        :return dict
+        """
+        labels = dict({})
+        labels["labels"] = []
+        for label in response['Labels']:
+            labels['labels'].append({'name': label['Name'], 'confidence': label['Confidence']})
+        return labels

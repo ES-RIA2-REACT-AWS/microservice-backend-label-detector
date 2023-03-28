@@ -9,6 +9,7 @@ FROM ${BUILD_IMAGE} AS build
 ARG USER_NAME
 ARG APP_WORKDIR
 
+RUN apt-get update && apt-get upgrade -y
 WORKDIR /$APP_WORKDIR
 # Sets utf-8 encoding for Python
 ENV LANG=C.UTF-8
