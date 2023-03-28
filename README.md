@@ -11,7 +11,6 @@ AWS).
 The principle is the following, a link must be submitted to our API, the image behind the link will be analyzed by
 an AI which will detect objects, concepts, and scenes.
 
-In this project we will use AWS rekognition.
 
 ## Table of content
 
